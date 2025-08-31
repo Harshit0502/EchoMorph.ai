@@ -3,6 +3,56 @@ import os, tempfile, subprocess, csv, base64, requests
 import soundfile as sf
 import numpy as np
 from datetime import datetime
+import os, subprocess, shutil
+
+# ---- FFmpeg helper ----
+def _try_ffmpeg(cmd_name="ffmpeg"):
+    try:
+        subprocess.run([cmd_name, "-version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return cmd_name
+    except Exception:
+        return None
+
+def ensure_ffmpeg():
+    """
+    Ensure ffmpeg is available.
+    Order:
+      1) System PATH
+      2) imageio_ffmpeg bundled binary (auto-downloaded)
+    Sets os.environ['FFMPEG_BINARY'] and updates PATH if needed.
+    """
+    # 1) Check PATH
+    path_ff = shutil.which("ffmpeg")
+    if path_ff and _try_ffmpeg("ffmpeg"):
+        os.environ["FFMPEG_BINARY"] = "ffmpeg"
+        return "ffmpeg"
+
+    # 2) Try imageio-ffmpeg
+    try:
+        import imageio_ffmpeg
+        ffbin = imageio_ffmpeg.get_ffmpeg_exe()  # downloads a local ffmpeg if missing
+        if ffbin and _try_ffmpeg(ffbin):
+            # Add the directory containing the binary to PATH
+            bindir = os.path.dirname(ffbin)
+            os.environ["PATH"] = bindir + os.pathsep + os.environ.get("PATH", "")
+            os.environ["FFMPEG_BINARY"] = ffbin
+            return ffbin
+    except Exception as e:
+        st.warning(f"imageio-ffmpeg fallback failed: {e}")
+
+    # 3) Give a clear error to the user with actionable steps
+    st.error(
+        "FFmpeg not found.\n\n"
+        "• If you’re on **Streamlit Cloud**, add an `apt.txt` file at repo root with a single line `ffmpeg` and redeploy.\n"
+        "• If you’re on **Linux (local)**: `sudo apt-get update && sudo apt-get install -y ffmpeg`\n"
+        "• If you’re on **macOS**: `brew install ffmpeg`\n"
+        "• If you’re on **Windows**: install FFmpeg and add its `bin/` to PATH.\n"
+        "• Or keep `imageio-ffmpeg` in requirements so this app auto-downloads a local ffmpeg."
+    )
+    st.stop()
+
+FFMPEG = ensure_ffmpeg()  # call this once at startup
+
 
 st.set_page_config(page_title="JA AV Dubbing", layout="wide")
 st.title("EchoMorph.ai")
