@@ -74,13 +74,13 @@ def run(cmd):
 
 def ensure_ffmpeg():
     try:
-        subprocess.run(["ffmpeg","-version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run([os.environ.get("FFMPEG_BINARY", "ffmpeg"),"-version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception:
         st.error("FFmpeg not found. Install FFmpeg and re-run.")
         st.stop()
 
 def standardize_to_mono16k(in_path, out_path):
-    run(["ffmpeg","-y","-i", in_path, "-ac","1","-ar","16000","-vn", out_path])
+    run([os.environ.get("FFMPEG_BINARY", "ffmpeg"), "-y", "-i", in_path, "-ac","1","-ar","16000","-vn", out_path])
 
 def slice_audio(wav, sr, t0, t1):
     i0 = max(0, int(round(t0*sr))); i1 = min(len(wav), int(round(t1*sr)))
@@ -232,7 +232,7 @@ def murf_tts_lines(rows, out_dir, api_key, default_voice, default_style):
     return mix
 
 def merge_video_audio(video_path, audio_path, output_path):
-    run(["ffmpeg","-y","-i", video_path, "-i", audio_path, "-c:v","copy","-c:a","aac","-shortest", output_path])
+    run([os.environ.get("FFMPEG_BINARY", "ffmpeg"), "-y","-i", video_path, "-i", audio_path, "-c:v","copy","-c:a","aac","-shortest", output_path])
 
 # ---------- UI ----------
 ensure_ffmpeg()
