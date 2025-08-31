@@ -5,7 +5,7 @@ import numpy as np
 from datetime import datetime
 
 st.set_page_config(page_title="JA AV Dubbing", layout="wide")
-st.title("Japanese AV Dubbing – quick demo")
+st.title("EchoMorph.ai")
 
 # ---------- Config (edit quickly) ----------
 WHISPER_MODEL = st.selectbox("Whisper model", ["small", "medium", "large-v3"], index=2)
