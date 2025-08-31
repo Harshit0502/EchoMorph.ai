@@ -13,3 +13,4 @@ deep-translator
 murf
 pydub
 requests
+imageio-ffmpeg
