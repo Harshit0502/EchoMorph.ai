@@ -1,4 +1,4 @@
-# JP Video → EN Voice: Transcribe, Diarize, Translate, TTS, and Mux Pipeline
+# EchoMorph.ai → EN Voice: Transcribe, Diarize, Translate, TTS, and Mux Pipeline
 
 ## Overview
 
