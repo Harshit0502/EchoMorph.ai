@@ -1,11 +1,8 @@
 streamlit
-torch
-torchaudio
 soundfile
 librosa
 tqdm
 openai-whisper
-resemblyzer
 spectralcluster
 scikit-learn
 ffmpeg-python
