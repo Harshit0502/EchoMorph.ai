@@ -1,3 +1,9 @@
+---
+title: My Streamlit App
+sdk: docker
+app_port: 7860
+---
+
 # EchoMorph.ai → EN Voice: Transcribe, Diarize, Translate, TTS, and Mux Pipeline
 
 ## Overview
